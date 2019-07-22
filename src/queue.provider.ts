@@ -50,6 +50,8 @@ export class QueueProvider {
 
     return instanceWrappers
       .map(({ instance }) => {
+        if (!instance) return;
+
         const instancePrototype = Object.getPrototypeOf(instance);
         const scanResult = this.metadataScanner.scanFromPrototype(
           instance,
@@ -65,7 +67,7 @@ export class QueueProvider {
         return scanResult.map(r => ({ ...r, instance }));
       })
       .reduce((prev, curr) => {
-        return prev.concat(curr);
+        return curr ? prev.concat(curr) : prev;
       });
   }
 
